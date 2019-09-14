@@ -3,13 +3,14 @@ package resources;
 import product.Alloy;
 import utils.Codes;
 
-public class Shop implements Codes {
+public class
+Shop implements Codes {
 
     private final double PLATINUM_COST  = 1200;
     private final double IRON_COST      = 300;
     private final double COPPER_COST    = 800;
 
-    private Alloy adamantium;
+    private Alloy adamantium = new Alloy(3000, 0.2, 0.7, 0.1, 25);
     private Alloy unobtainium;
     private Alloy dilithium;
     private Alloy pandemonium;
