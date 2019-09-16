@@ -1,13 +1,10 @@
 package product
 
-class Alloy (price: Double,
+class Alloy (private val price: Double,
              private val platinum: Double,
              private val iron: Double,
              private val copper: Double,
              private val electricity: Double) {
-
-    val price: Double = price
-        get() = field
 
     private val PLATINUM = "platinum"
     private val IRON = "iron"
@@ -20,11 +17,16 @@ class Alloy (price: Double,
      * @param alloy amounts
      * @return an array with the quantity of each resource required
      */
-    fun calc(alloy: Int): Map<String, Double> {
+    fun calc(alloy: Double): Map<String, Double> {
         return mapOf(
-                PLATINUM to platinum * alloy,
-                IRON to iron * alloy,
-                COPPER to copper * alloy,
-                ELECTRICITY to electricity * alloy)
+                PLATINUM    to Math.abs(platinum * alloy),
+                IRON        to Math.abs(iron * alloy),
+                COPPER      to Math.abs(copper * alloy),
+                ELECTRICITY to Math.abs(electricity * alloy))
+    }
+
+    fun price(quant: Double) : Double{
+        if (quant <= 0.0) return 0.0
+        return quant * price
     }
 }
