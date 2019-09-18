@@ -1,23 +1,42 @@
 package gen
 
 import resources.Shop
+import java.io.File
+import java.io.FileOutputStream
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random
-import kotlin.random.asJavaRandom
 
 fun main(){
     val evo = Evo(10000)
     evo.initialisePopulation()
 
-    for (i in 1..100000){
+    for (i in 1..50){
         evo.run()
         evo.selection()
         evo.mutate()
-
+        writeBest(evo.best)
         println("${evo.best.result}")
         for (v in evo.best.vectors){
             print("${v.key} ${v.value} ")
         }
         println("\n")
+    }
+}
+
+fun writeBest(best : Solution){
+    FileOutputStream("best.csv", true).bufferedWriter().use { out ->
+        best.vectors.forEach { t, u ->  out.write("$u;")}
+        out.write("${best.result}\n")
+        out.flush()
+    }
+}
+
+fun write(gen : List<Solution>){
+    File("results3.csv").bufferedWriter().use { out ->
+        gen.forEach {
+            out.write("${it.vectors["adamantium"]};${it.vectors["unobtainium"]};${it.vectors["dilithium"]};${it.vectors["pandemonium"]};${it.result}\n")
+        }
+        out.flush()
     }
 }
 
@@ -27,27 +46,27 @@ class Evo (val population : Int){
     var best = Solution()
 
 
-    val mutation_rate       = 0.5
-    val mutation_magnitude  = 0.01
+    val mutation_rate       = 0.004
+    val mutation_magnitude  = 1.1
 
     val random = java.util.Random()
-    val tournament_count = population / 20
+    val tournament_count = population / 10
     val alloys = listOf("adamantium", "unobtainium", "dilithium", "pandemonium")
     val shop = Shop()
 
 
 
     fun initialisePopulation(){
-        println(tournament_count)
         for (x in 1..population){
             val newSolution = Solution()
-            for (a in alloys) newSolution.vectors[a] = Random.nextDouble(0.0, 150.0)
+            for (a in alloys) newSolution.vectors[a] = Random.nextDouble(0.0, 50.0)
             curGeneration.add(newSolution)
         }
     }
 
-    fun run(){
+    fun run() : List<Solution>{
         for (g in curGeneration) g.result = shop.buy(g.vectors)
+        return curGeneration
     }
 
     fun selection(){
@@ -57,9 +76,10 @@ class Evo (val population : Int){
     }
 
     fun tournament() : Solution{
-        var tourn = mutableListOf<Solution>()
+        val tourn = mutableListOf<Solution>()
         for (x in 1..tournament_count) tourn.add(curGeneration[Random.nextInt(0, population)])
         return tourn.max()!!
+
     }
 
     fun mutate(){
@@ -69,12 +89,13 @@ class Evo (val population : Int){
                 val next = Solution()
                 for (vector in cur.vectors)
                     if (Random.nextDouble(0.0, 1.1) < mutation_rate)
-                        next.vectors[vector.key] = random.nextGaussian() + vector.value
+                        next.vectors[vector.key] = (random.nextGaussian() + vector.value)
                 else next.vectors[vector.key] = vector.value
 
                 curGeneration.add(next)
             }
         }
         newGeneration = mutableListOf()
+
     }
 }

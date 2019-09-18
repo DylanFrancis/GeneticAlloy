@@ -1,9 +1,6 @@
 package resources
 
 import product.Alloy
-import utils.Codes
-import java.util.function.BiConsumer
-import java.util.function.ToDoubleBiFunction
 
 
 fun main() {
@@ -95,8 +92,7 @@ class Shop {
 
     fun calcPlat(platinum: Double) : Double{
         if (platinum <= 0.0) return 0.0
-        val p = platinum.toInt()
-        return (platinum * PLATINUM_COST) + (p * 10)
+        return ((10 * platinum.toInt()) + 1200) * platinum
     }
 
     fun calcElectricity(electricity : Double) : Double{
