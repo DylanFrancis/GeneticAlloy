@@ -3,7 +3,6 @@ package gen
 import resources.Shop
 import java.io.File
 import java.io.FileOutputStream
-import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random
 
 fun main(){
@@ -47,7 +46,6 @@ class Evo (val population : Int){
 
 
     val mutation_rate       = 0.004
-    val mutation_magnitude  = 1.1
 
     val random = java.util.Random()
     val tournament_count = population / 10
